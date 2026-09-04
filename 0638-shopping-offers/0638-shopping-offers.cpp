@@ -44,7 +44,12 @@
 
 
 
-string getKey(vector<int>& needs) {
+
+class Solution {
+public:
+    unordered_map<string, int> memo;
+    
+    string getKey(vector<int>& needs) {
     string key = "";
     for (int count : needs) {
         // Kyunki count single digit hota hai, hum direct char me convert kar sakte hain
@@ -54,10 +59,7 @@ string getKey(vector<int>& needs) {
     return key;
 }
 
-class Solution {
-public:
-    unordered_map<string, int> memo;
-    
+
     int shoppingOffers(vector<int>& price, vector<vector<int>>& special, vector<int>& needs) {
         string key = getKey(needs);
         
