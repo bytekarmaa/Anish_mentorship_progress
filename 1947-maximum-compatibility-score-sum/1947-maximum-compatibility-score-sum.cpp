@@ -3,6 +3,8 @@ public:
 
 int n;
 
+vector<int> dp;
+
 int get_score(vector<int> &student, vector<int> &mentor){
     int m = student.size();
 
@@ -17,6 +19,8 @@ int get_score(vector<int> &student, vector<int> &mentor){
 
 int solve(vector<vector<int>>& students, vector<vector<int>>& mentors,int ind, int bitMask){
     if(ind == n) return 0;
+
+    if(dp[bitMask] != -1) return dp[bitMask];
 
     int maxScore = 0;
 
@@ -33,12 +37,14 @@ int solve(vector<vector<int>>& students, vector<vector<int>>& mentors,int ind, i
         }
     }
 
-    return maxScore;
+    return dp[bitMask] = maxScore;
 }
 
     int maxCompatibilitySum(vector<vector<int>>& students, vector<vector<int>>& mentors) {
         
         n = students.size();
+
+        dp.resize((1 << n),-1);
 
         int bitMask = 0;
 
