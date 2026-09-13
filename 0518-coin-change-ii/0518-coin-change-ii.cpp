@@ -1,29 +1,31 @@
 class Solution {
 public:
-
-int n;
-
-vector<vector<int>> dp;
-
-int solve(vector<int> &coins, int amount, int ind){
-    if(amount == 0) return 1;
-
-    if(ind >= n || amount < 0) return 0;
-
-    if(dp[ind][amount] != -1) return dp[ind][amount];
-
-    int take = solve(coins,amount - coins[ind],ind);
-    int skip = solve(coins,amount,ind+1); 
-
-    return dp[ind][amount] = take + skip;
-}
-
     int change(int amount, vector<int>& coins) {
-        
-        n = coins.size();
+        int n = coins.size();
 
-        dp.assign(n,vector<int> (amount+1,-1));
+        vector<vector<int>> dp(n + 1, vector<int>(amount + 1, 0));
 
-        return solve(coins,amount,0);
+        // There is exactly one way to make amount 0:
+        // choose no coins.
+        for (int i = 0; i < n + 1; i++) {
+            dp[i][0] = 1;
+        }
+
+        for (int i = 1; i < n + 1; i++) {
+            for (int j = 1; j < amount + 1; j++) {
+
+                if (coins[i - 1] <= j) {
+                    long long ways =
+                        1LL * dp[i][j - coins[i - 1]] + dp[i - 1][j];
+
+                    // Prevent overflow in intermediate DP states.
+                    dp[i][j] = min(ways, 1LL * INT_MAX);
+                } else {
+                    dp[i][j] = dp[i - 1][j];
+                }
+            }
+        }
+
+        return dp[n][amount];
     }
 };
