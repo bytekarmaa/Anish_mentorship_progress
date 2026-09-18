@@ -1,29 +1,48 @@
+// class Solution {
+// public:
+//     int maxProfit(vector<int>& prices) {
+//         int n = prices.size();
+
+//         vector<vector<int>> dp(n + 2, vector<int>(2, 0));
+
+//         for(int day = n - 1; day >= 0; day--){
+//             for(int buy = 0; buy < 2; buy++){
+
+//                 if(buy){
+//                     int take_Stock = dp[day + 1][0] - prices[day];
+//                     int skip_Stock = dp[day + 1][1];
+
+//                     dp[day][buy] = max(take_Stock, skip_Stock);
+//                 }
+//                 else{
+//                     int sell_Stock = prices[day] + dp[day + 2][1];
+//                     int skip_Stock = dp[day + 1][0];
+
+//                     dp[day][buy] = max(sell_Stock, skip_Stock);
+//                 }
+//             }
+//         }
+
+//         return dp[0][1];
+//     }
+// };
+
 class Solution {
 public:
     int maxProfit(vector<int>& prices) {
         int n = prices.size();
 
-        vector<vector<int>> dp(n + 2, vector<int>(2, 0));
+        vector<int> next(2, 0), next2(2, 0), curr(2, 0);
 
         for(int day = n - 1; day >= 0; day--){
-            for(int buy = 0; buy < 2; buy++){
+            curr[1] = max(next[0] - prices[day], next[1]);
+            curr[0] = max(prices[day] + next2[1], next[0]);
 
-                if(buy){
-                    int take_Stock = dp[day + 1][0] - prices[day];
-                    int skip_Stock = dp[day + 1][1];
-
-                    dp[day][buy] = max(take_Stock, skip_Stock);
-                }
-                else{
-                    int sell_Stock = prices[day] + dp[day + 2][1];
-                    int skip_Stock = dp[day + 1][0];
-
-                    dp[day][buy] = max(sell_Stock, skip_Stock);
-                }
-            }
+            next2 = next;
+            next = curr;
         }
 
-        return dp[0][1];
+        return next[1];
     }
 };
 
