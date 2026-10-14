@@ -1,35 +1,31 @@
 class Solution {
 public:
+    int numSubarraysWithSum(vector<int>& nums, int goal) {
+        int n = nums.size();
+        vector<int> ind = {-1};
 
+        for(int i = 0; i < n; i++)
+            if(nums[i] == 1) ind.push_back(i);
 
-int subarray(vector<int> &nums , int goal){
+        ind.push_back(n);
 
-    if(goal < 0) return 0;
+        int m = ind.size() - 2;
+        int count = 0;
 
-    int n = nums.size();
-    int sum = 0;
-
-    int left = 0;
-    int right = 0;
-
-    int count = 0;
-
-    while(right < n){
-        sum += nums[right];
-
-        while(sum > goal){
-            sum -= (nums[left]);
-            left++;
+        if(goal == 0) {
+            for(int i = 1; i < ind.size(); i++) {
+                int len = ind[i] - ind[i-1] - 1;
+                count += len * (len + 1) / 2;
+            }
+            return count;
         }
 
-        count += (right-left+1);
-        right++;
-    }
+        for(int i = 1; i + goal - 1 <= m; i++) {
+            int left = ind[i] - ind[i-1];
+            int right = ind[i+goal] - ind[i+goal-1];
+            count += left * right;
+        }
 
-    return count;
-}
-
-    int numSubarraysWithSum(vector<int>& nums, int goal) {
-         return subarray(nums,goal) - subarray(nums,goal-1);
+        return count;
     }
 };
