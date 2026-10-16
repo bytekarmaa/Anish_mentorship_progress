@@ -1,29 +1,47 @@
 class Solution {
 public:
-
-int subarray(vector<int> &nums, int k){
-    int result = 0;
-    unordered_map<int,int> mp;
-
-    int i = 0;
-
-    for(int j = 0; j < nums.size(); j++){
-        mp[nums[j]]++;
-
-       while(mp.size() > k){
-        mp[nums[i]]--;
-        if(mp[nums[i]] == 0) mp.erase(nums[i]);
-        i++;
-       }
-
-       result += (j-i+1);
-    }
-
-    return result;
-}
-
-
     int subarraysWithKDistinct(vector<int>& nums, int k) {
-        return subarray(nums,k) - subarray(nums,k-1);
+        int n = nums.size();
+        // Constraints ke according nums[i] <= n hota h, so vector is faster than unordered_map
+        vector<int> freq(n + 1, 0); 
+        
+        int left = 0, right = 0;
+        int distinct_count = 0;
+        int prefix_count = 0;
+        int total_subarrays = 0;
+        
+        while (right < n) {
+            // Naya element add karo
+            if (freq[nums[right]] == 0) {
+                distinct_count++;
+            }
+            freq[nums[right]]++;
+            
+            // Agar distinct elements K se zyada ho gaye, window ko aage badao
+            if (distinct_count > k) {
+                freq[nums[left]]--;
+                left++;
+                distinct_count--;
+                prefix_count = 0; // Boundary shift ho gayi, prefix reset
+            }
+            
+            // Shrink phase: Agar left wale element ki frequency > 1 h, 
+            // iska matlab aage iska ek aur occurrence bacha hua h current window me.
+            // Toh hum safely left ko aage bada sakte hain bina distinct_count kam kiye.
+            while (freq[nums[left]] > 1) {
+                freq[nums[left]]--;
+                left++;
+                prefix_count++; // Valid subarrays ka count badh gaya
+            }
+            
+            // Jab exactly K distinct elements hon
+            if (distinct_count == k) {
+                total_subarrays += (1 + prefix_count);
+            }
+            
+            right++;
+        }
+        
+        return total_subarrays;
     }
 };
