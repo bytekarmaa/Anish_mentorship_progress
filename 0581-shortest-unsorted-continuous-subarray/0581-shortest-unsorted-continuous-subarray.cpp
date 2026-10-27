@@ -3,29 +3,34 @@ public:
     int findUnsortedSubarray(vector<int>& nums) {
         int n = nums.size();
 
-        vector<pair<int,int>> ele_ind;
+        int minEleInd = -1;
+
+        int maxEleInd = -1;
+
+        int maxEle = INT_MIN;
 
         for(int i = 0; i < n; i++){
-            ele_ind.push_back({nums[i],i});
-        }
-
-        sort(ele_ind.begin(),ele_ind.end());
-
-
-        int first = -1;
-        int last = -1;
-
-        for(int i = 0; i < n; i++){
-            int req_Val = ele_ind[i].first;
-
-            if(req_Val != nums[i]){
-                if(first == -1) first = i;
-                last = i;
+            if(maxEle <= nums[i]){
+                maxEle = nums[i];
             }
+            
+            else maxEleInd = i;
         }
 
-        if(first == -1) return 0;
+        int minEle = INT_MAX;
 
-        return last - first + 1;
+        for(int i = n-1; i >= 0; i--){
+            if(minEle >= nums[i]){
+                minEle = nums[i];
+            }
+            
+            else minEleInd = i;
+        }
+
+        if(minEleInd == -1) return 0;
+
+        return maxEleInd - minEleInd + 1;
+
+
     }
 };
