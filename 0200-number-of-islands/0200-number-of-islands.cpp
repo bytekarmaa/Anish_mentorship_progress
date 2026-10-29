@@ -1,55 +1,82 @@
 class Solution {
 public:
 
-int n,m;
+vector<int> parent;
+vector<int> rank;
 
 vector<vector<int>> directions = {{0,1},{0,-1},{1,0},{-1,0}};
 
-void bfs(vector<vector<char>> &grid, int r, int c){
-    queue<pair<int,int>> q;
+int find(int i){
+    if(parent[i] == i) return i;
 
-    q.push({r,c});
-    grid[r][c] = '#';
+    return parent[i] = find(parent[i]);
+}
 
-    while(!q.empty()){
-        auto [i,j] = q.front();
-        q.pop();
+void Union(int i, int j){
+    int par_i = find(i);
 
-        for(auto &dir : directions){
-            int new_i = i + dir[0];
-            int new_j = j + dir[1];
+    int par_j = find(j);
 
-            if(new_i >= 0 && new_i < n && new_j >= 0 && new_j < m && grid[new_i][new_j] == '1'){
-                grid[new_i][new_j] = '#';
-                q.push({new_i,new_j});
-            }
-        }
+    if(par_i == par_j) return;
+
+
+    if(rank[par_i] < rank[par_j]){
+        parent[par_i] = par_j;
     }
+
+    else if(rank[par_i] > rank[par_j]){
+        parent[par_j] = par_i;
+    }
+
+    else{
+        parent[par_i] = par_j;
+
+        rank[par_j]++;
+    }
+
+    return;
 }
 
     int numIslands(vector<vector<char>>& grid) {
-         int ans = 0;
-    
-         n = grid.size();
-         m = grid[0].size();
+        int n = grid.size();
+        int m = grid[0].size();
+
+        parent.resize(n*m);
+        rank.resize(n*m,0);
+
+        for(int i = 0; i < n * m; i++) parent[i] = i;
 
         for(int i = 0; i < n; i++){
             for(int j = 0; j < m; j++){
-                if(grid[i][j] == '1'){
-                    ans++;
-                    bfs(grid,i,j);
+                if(grid[i][j] == '0') continue;
+                int curr = i * m + j;
+
+                for(auto dir : directions){
+                    int new_i = i + dir[0];
+                    int new_j = j + dir[1];
+
+                    if(new_i >= n || new_i < 0 || new_j >= m || new_j < 0 || grid[new_i][new_j] == '0') continue;
+
+                    int next = new_i * m + new_j;
+
+                    Union(curr,next);
                 }
             }
         }
 
-        // regain the original grid
+       
+       unordered_set<int> st;
 
-        for(int i = 0; i < n; i++){
-            for(int j = 0; j < m; j++){
-                if(grid[i][j] == '#') grid[i][j] = '1';
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j] == '1') {
+                    int id = i * m + j;
+                    st.insert(find(id));
+                }
             }
         }
 
-        return ans;
+            return st.size();
+
     }
 };
