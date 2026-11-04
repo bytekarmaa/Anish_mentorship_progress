@@ -36,7 +36,7 @@ public:
         }
 
         // now just take the maxcomponent size
-        
+
         int ans = -1;
 
         for(int i = 0; i < n; i++) {
@@ -44,20 +44,14 @@ public:
 
                 int cnt = 0;
                 q.push(i);
-                visited[i] = true;
 
                 while(!q.empty()) {
                     int node = q.front();
                     q.pop();
-
                     cnt++;
+                    visited[node] = true;
 
-                    int neg = edges[node];
-
-                    if(neg != -1 && !visited[neg]) {
-                        visited[neg] = true;
-                        q.push(neg);
-                    }
+                    if(!visited[edges[node]]) q.push(edges[node]);
                 }
 
                 ans = max(ans, cnt);
