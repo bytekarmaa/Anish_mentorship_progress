@@ -13,7 +13,7 @@ public:
         
         queue<int> que;
 	    vector<int> indegree(V, 0);
-	    int count = 0;
+	   
 	    //1
 	    for(int u = 0; u < V; u++) {
 	        for(int &v : graph[u]) {
@@ -26,7 +26,7 @@ public:
 	    for(int i = 0; i < V; i++) {
 	        if(indegree[i] == 0) {
 	            que.push(i);
-	            count++;
+	         
 	        }
 	    }
 	    
@@ -42,7 +42,7 @@ public:
 	            
 	            if(indegree[v] == 0) {
 	                que.push(v);
-	                count++;
+	                
 	            }
 	            
 	        }
