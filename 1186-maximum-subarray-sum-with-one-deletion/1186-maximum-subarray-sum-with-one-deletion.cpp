@@ -30,10 +30,6 @@ public:
             sum = newSum;
         }
 
-        for(int i = 0; i < n; i++){
-            cout<<kdane[i] << " "  << right[n-i-1] << endl;
-        }
-
        
 
         for(int i = 1; i < n-1; i++){
